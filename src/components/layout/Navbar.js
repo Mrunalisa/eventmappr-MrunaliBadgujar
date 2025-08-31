@@ -41,7 +41,10 @@ const Navbar = () => {
         <Link to="/tourist-places" className="nav-link">
           <i className="fas fa-map"></i> Tourist Places
         </Link>
-        <Link to="/badge" className="badge-btn">Generate Badge</Link>
+<Link to="/event-gallery" className="nav-link">
+  <i className="fas fa-event"></i> Event Gallery
+</Link>
+<Link to="/badge" className="badge-btn">Generate Badge</Link>
         <Link to="/add-event" className="add-event-btn">Add Event</Link>
       </div>
       <div className="menu-toggle" onClick={toggleMenu}>

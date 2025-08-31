@@ -7,7 +7,6 @@ import FAQSection from '../components/sections/FAQSection';
 import ContactSection from '../components/sections/ContactSection';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import CtaSection from '../components/sections/CtaSection';
-
 const HomePage = () => {
   return (
     <main className="home-container">
