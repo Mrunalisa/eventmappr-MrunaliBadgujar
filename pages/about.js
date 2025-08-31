@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -14,15 +14,6 @@ import {
   Camera,
   RotateCcw,
 } from "lucide-react";
-
-export default function About() {
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 80,
-    });
-  }, []);
 
   const features = [
     {
@@ -57,10 +48,49 @@ export default function About() {
     },
     {
       icon: <RotateCcw size={28} />,
-      label: "NEW: Modular Routing with react-router",
+      label: "NEW: Modular Routing with Next.js",
     },
   ];
 
+  // Main About Page Component
+  const AboutPage = () => {
+    const [heroGifError, setHeroGifError] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+  
+    useEffect(() => {
+      // Check localStorage for theme first
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'dark') {
+        setIsDarkMode(true);
+      } else if (storedTheme === 'light') {
+        setIsDarkMode(false);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setIsDarkMode(true);
+      }
+    }, []);
+  
+    useEffect(() => {
+      // Persist theme to localStorage
+      if (isDarkMode) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    }, [isDarkMode]);
+  
+    useEffect(() => {
+      AOS.init({
+        once: true,
+        duration: 1000,
+        easing: 'ease-out-quart',
+        delay: 50,
+      });
+    }, []);
+  
+    const toggleTheme = () => {
+      setIsDarkMode(!isDarkMode);
+    };
+  
   return (
     <>
       <Head>
@@ -71,7 +101,7 @@ export default function About() {
         />
       </Head>
 
-      <div className="about-page">
+      <div className={`about-page${isDarkMode ? " dark" : ""}`}>
        
         <section className="hero-section" data-aos="fade-down">
           <div className="hero-content">
@@ -154,11 +184,17 @@ export default function About() {
           </div>
         </section>
       </div>
-
-      <style jsx>{`
+    
+      <style jsx global>{`
+        .about-page {
+      {/* Removed global style block for maintainability. Use only scoped <style jsx> below. */}
         .about-page {
           min-height: 100vh;
           background: linear-gradient(180deg, #fafbff 0%, #f1f5ff 100%);
+        }
+
+        .about-page.dark {
+          background: linear-gradient(180deg, #1e293b 0%, #3b82f6 100%);
         }
 
         /* Hero Section */
@@ -225,11 +261,14 @@ export default function About() {
           line-height: 1.1;
         }
 
-        .hero-section p {
+        .about-page .hero-section p {
           font-size: 1.25rem;
           color: #64748b;
           line-height: 1.7;
           margin-bottom: 3rem;
+        }
+        .about-page.dark .hero-section p {
+          color: #fff;
         }
 
         .hero-stats {
@@ -251,17 +290,21 @@ export default function About() {
           margin-bottom: 0.25rem;
         }
 
-        .stat-label {
+        .about-page .stat-label {
           font-size: 0.875rem;
           color: #64748b;
           font-weight: 500;
         }
+        
 
         /* Features Section */
-        .features-section {
+        .about-page. .features-section {
           padding: 4rem 2rem;
           background: white;
           position: relative;
+        }
+        .about-page.dark .features-section {
+          background: #1e293b;
         }
 
         .features-container {
@@ -274,16 +317,22 @@ export default function About() {
           margin-bottom: 4rem;
         }
 
-        .section-header h2 {
+        .about-page.dark .features-section .features-container .section-header h2 {
           font-size: 2.5rem;
           font-weight: 700;
           color: #1e293b;
           margin-bottom: 1rem;
         }
+        .about-page.dark .section-header h2 {
+          color: #93c5fd;
+        }
 
-        .section-header p {
+        .about-page .section-header p {
           font-size: 1.125rem;
           color: #64748b;
+        }
+        .about-page.dark .section-header p {
+          color: #fff;
         }
 
         .features-grid {
@@ -342,6 +391,7 @@ export default function About() {
           color: white;
           transform: scale(1.05);
         }
+        
 
         .feature-text {
           font-size: 1rem;
@@ -350,11 +400,17 @@ export default function About() {
           margin: 0;
           font-weight: 500;
         }
+    
+
 
         /* Stats Section */
-        .stats-section {
+        .about-page .stats-section {
           padding: 4rem 2rem;
           background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .about-page.dark .stats-section {
+          background: #1e293b;
         }
 
         .stats-container {
@@ -362,11 +418,13 @@ export default function About() {
           margin: 0 auto;
           text-align: center;
         }
+        
 
         .stats-section h3 {
           font-size: 2rem;
           font-weight: 700;
           color: #1e293b;
+          margin-top: 2rem;
           margin-bottom: 2rem;
         }
 
@@ -434,4 +492,5 @@ export default function About() {
       `}</style>
     </>
   );
-}
+};
+export default AboutPage;
